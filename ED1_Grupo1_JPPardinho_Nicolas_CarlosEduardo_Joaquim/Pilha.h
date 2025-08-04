@@ -6,11 +6,41 @@
 #ifndef __PILHA_H__
 #define __PILHA_H__
 
-typedef struct Pilha
-{
-    /* preencher */
-}P;
+#include <stdio.h>
+#include <stdlib.h>
 
-/* declarar funções genericas */
+typedef void* Generico;
+
+typedef struct no {
+    Generico dado;
+    struct no* proximo;
+} No;
+
+typedef struct pilha
+{
+    No *topo;
+    int tamanho;
+}Pilha;
+
+// Cria uma nova pilha vazia
+Pilha* criaPilha();
+
+// Destroi a pilha, liberando toda a memória
+void destroiPilha(Pilha** p);
+
+// Empilha um elemento genérico
+void empilhar(Pilha* p, Generico elemento);
+
+// Desempilha um elemento (retorna NULL se vazia)
+Generico desempilha(Pilha* p);
+
+// Retorna o elemento do topo sem remover (NULL se vazia)
+Generico valorTopo(Pilha* p);
+
+// Verifica se a pilha está vazia
+int verificaPilhaVazia(Pilha* p);
+
+// Retorna o tamanho atual da pilha
+int tamanhoPilha(Pilha* p);
 
 #endif
