@@ -49,7 +49,7 @@ void empilhar(Pilha* p, Generico elemento) {
 }
 
 // Desempilha um elemento (retorna NULL se vazia)
-Generico desempilha(Pilha* p) {
+Generico desempilhar(Pilha* p) {
     if (p == NULL || p->topo == NULL) return NULL;
     
     No* aux = p->topo;

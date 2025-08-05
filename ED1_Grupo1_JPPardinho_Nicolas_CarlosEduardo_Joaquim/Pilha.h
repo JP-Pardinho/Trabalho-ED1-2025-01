@@ -10,7 +10,6 @@
 #include <stdlib.h>
 
 typedef void* Generico;
-
 typedef struct no {
     Generico dado;
     struct no* proximo;
@@ -32,7 +31,7 @@ void destroiPilha(Pilha** p);
 void empilhar(Pilha* p, Generico elemento);
 
 // Desempilha um elemento (retorna NULL se vazia)
-Generico desempilha(Pilha* p);
+Generico desempilhar(Pilha* p);
 
 // Retorna o elemento do topo sem remover (NULL se vazia)
 Generico valorTopo(Pilha* p);
@@ -42,5 +41,7 @@ int verificaPilhaVazia(Pilha* p);
 
 // Retorna o tamanho atual da pilha
 int tamanhoPilha(Pilha* p);
+
+
 
 #endif
