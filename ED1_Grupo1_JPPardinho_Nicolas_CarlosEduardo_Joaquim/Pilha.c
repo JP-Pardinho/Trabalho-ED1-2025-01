@@ -69,7 +69,7 @@ Generico valorTopo(Pilha* p) {
 }
 
 // Verifica se a pilha está vazia (0 = false, 1 = true)
-int VerificaPilhaVazia(Pilha* p) {
+int verificaPilhaVazia(Pilha* p) {
     if (p == NULL) return 1;  // Consideramos NULL como vazia
     return (p->topo == NULL);
 }

@@ -156,40 +156,45 @@ int expressaoValida(char *expressao)
 int main()
 {
     char expressao[1000];
+    int op;
+    
+    for(int i=0; i<3; i++) {
+        if (i == 4){
+            break;
+        }
+        printf("Digite a expressão matemática (use A-J como variáveis):\n");
+        fgets(expressao, sizeof(expressao), stdin);
+        expressao[strcspn(expressao, "\n")] = '\0'; // Remove o \n do final
 
-    printf("Digite a expressão matemática (use A-J como variáveis):\n");
-    fgets(expressao, sizeof(expressao), stdin);
-    expressao[strcspn(expressao, "\n")] = '\0'; // Remove o \n do final
+        // Verifica se a expressão contém apenas caracteres válidos
+        if (!expressaoValida(expressao))
+        {
+            printf("Expressão inválida: contém caracteres não permitidos.\n");
+            return 1;
+        }
 
-    // Verifica se a expressão contém apenas caracteres válidos
-    if (!expressaoValida(expressao))
-    {
-        printf("Expressão inválida: contém caracteres não permitidos.\n");
-        return 1;
+        // Verificação a) - apenas fechamento correto
+        int validoA = verificaFechamento(expressao);
+
+        // Verificação b) - precedência dos delimitadores
+        int validoB = verificaPrecedencia(expressao);
+
+        printf("\nResultados da validação:\n");
+        printf("a) Fechamento correto: %s\n", validoA ? "VÁLIDO" : "INVÁLIDO");
+        printf("b) Precedência correta: %s\n", validoB ? "VÁLIDO" : "INVÁLIDO");
+
+        if (validoA && validoB)
+        {
+            printf("\nA expressão é totalmente válida para ambos os critérios!\n");
+        }
+        else if (validoA)
+        {
+            printf("\nA expressão é válida apenas para o critério a) (fechamento correto).\n");
+        }
+        else
+        {
+            printf("\nA expressão é inválida para ambos os critérios.\n");
+        }
     }
-
-    // Verificação a) - apenas fechamento correto
-    int validoA = verificaFechamento(expressao);
-
-    // Verificação b) - precedência dos delimitadores
-    int validoB = verificaPrecedencia(expressao);
-
-    printf("\nResultados da validação:\n");
-    printf("a) Fechamento correto: %s\n", validoA ? "VÁLIDO" : "INVÁLIDO");
-    printf("b) Precedência correta: %s\n", validoB ? "VÁLIDO" : "INVÁLIDO");
-
-    if (validoA && validoB)
-    {
-        printf("\nA expressão é totalmente válida para ambos os critérios!\n");
-    }
-    else if (validoA)
-    {
-        printf("\nA expressão é válida apenas para o critério a) (fechamento correto).\n");
-    }
-    else
-    {
-        printf("\nA expressão é inválida para ambos os critérios.\n");
-    }
-
     return 0;
 }
