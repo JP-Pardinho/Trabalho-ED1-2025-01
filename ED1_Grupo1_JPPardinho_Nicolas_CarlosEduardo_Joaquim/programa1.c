@@ -78,7 +78,7 @@ int verificaFechamento(char *expressao)
 int verificaPrecedencia(char *expressao)
 {
     Pilha *p = criaPilha();
-    int resultado = 1; // Assume que é válido inicialmente
+    int resultado = 1;
 
     for (int i = 0; expressao[i] != '\0'; i++)
     {
@@ -86,23 +86,31 @@ int verificaPrecedencia(char *expressao)
 
         if (ehAbertura(c))
         {
-            // Verifica a precedência ao empilhar
+            // Verificação estrita da hierarquia
             if (!verificaPilhaVazia(p))
             {
                 char topo = (char)(size_t)valorTopo(p);
 
-                // Verifica a hierarquia: { > [ > (
-                if (c == '[' && topo == '{')
+                // Só permitir:
+                // - { como primeiro nível
+                // - [ somente dentro de {
+                // - ( somente dentro de [
+                if (c == '[' && topo != '{')
                 {
-                    // OK: [ dentro de {
+                    resultado = 0;
+                    break;
                 }
-                else if (c == '(' && (topo == '[' || topo == '{'))
+                if (c == '(' && topo != '[')
                 {
-                    // OK: ( dentro de [ ou {
+                    resultado = 0;
+                    break;
                 }
-                else if (c != topo && !(c == '{' && (topo == '[' || topo == '(')))
+            }
+            else
+            {
+                // Se a pilha está vazia, só pode começar com {
+                if (c != '{')
                 {
-                    // Não pode ter { dentro de [ ou (, etc.
                     resultado = 0;
                     break;
                 }
@@ -126,7 +134,6 @@ int verificaPrecedencia(char *expressao)
         }
     }
 
-    // Se a pilha não estiver vazia no final, faltaram fechamentos
     if (!verificaPilhaVazia(p))
     {
         resultado = 0;
