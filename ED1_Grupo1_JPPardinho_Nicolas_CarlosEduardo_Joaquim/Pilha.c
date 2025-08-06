@@ -32,17 +32,23 @@ void destroiPilha(Pilha** p) {
     *p = NULL;
 }
 
-// Empilha um elemento genérico
-void empilhar(Pilha* p, Generico elemento) {
-    if (p == NULL) return;
-    
+No* criaNo(Generico valor){
     No* novo = (No*)malloc(sizeof(No));
     if (novo == NULL){
         printf("\nErro de alocação ao crair o nó (empilhar)\n");
         exit(1);
     }
 
-    novo->dado = elemento;
+    novo->dado = valor;
+    novo->proximo = NULL;
+}
+
+// Empilha um elemento genérico
+void empilhar(Pilha* p, Generico elemento) {
+    if (p == NULL) return;
+    
+    No* novo = criaNo(elemento);
+
     novo->proximo = p->topo;
     p->topo = novo;
     p->tamanho++;

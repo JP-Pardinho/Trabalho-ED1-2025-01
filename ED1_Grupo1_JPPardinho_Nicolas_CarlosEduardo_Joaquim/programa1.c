@@ -3,6 +3,13 @@
     GRUPO 1: João Pedro Pardinho, Nícolas Leal, Joaquim Moizes, Carlos Eduardo de Oliveira
 */
 
+/*
+    PERGUNTAR: 
+        AS ENTRADAS TEM QUE SER EM ARQUIVO?
+        TEM QUE FAZER VERICAÇÃO DOS SINAIS?
+*/
+
+
 #include "Pilha.h"
 
 // Problema 1 a)
@@ -19,6 +26,20 @@ int verificaPrecedencia (Pilha p){
 // PARA UM EXPRESSÃO SER VALIDA TEM QUE ATENDER AS DUAS VERIFICAÇÕES
 
 int main() {
-    // CRIAR A INTERFACE PARA TESTAR AS COISAS
+    
+    /*
+        IDEIA 
+        printf("Digite a expressão matematica: ");
+        scanf("%s", string);
+
+        for(i=0; i<tamString; i++) {
+            if (string[i] == " "){
+                
+            }
+            empilhar(string[i]);
+        }
+
+    */
+
     return 0;
 }

@@ -21,6 +21,10 @@ typedef struct pilha
     int tamanho;
 }Pilha;
 
+
+// Cria um nó generico
+No* criaNo(Generico valor);
+
 // Cria uma nova pilha vazia
 Pilha* criaPilha();
 
