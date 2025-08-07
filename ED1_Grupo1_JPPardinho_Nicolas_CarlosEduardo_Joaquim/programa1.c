@@ -3,34 +3,56 @@
     GRUPO 1: João Pedro Pardinho, Nícolas Leal, Joaquim Moizes, Carlos Eduardo de Oliveira
 */
 
-/*
-    Trabalho Estrutura de dados I / 2025-1
-    GRUPO 1: João Pedro Pardinho, Nícolas Leal, Joaquim Moizes, Carlos Eduardo de Oliveira
-*/
-
 #include "Pilha.h"
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
+#define MAX_EXPRESSAO 10000
+
+char expressao[MAX_EXPRESSAO];
+
 // Função auxiliar para verificar se um caractere é um delimitador de abertura
-int ehAbertura(char c)
+int abertura(char c)
 {
-    return c == '(' || c == '[' || c == '{';
+    if (c == '(' || c == '[' || c == '{')
+    {
+        return 1; // É um delimitador de abertura
+    }
+    else
+        return 0; // Não é um delimitador de abertura
 }
 
 // Função auxiliar para verificar se um caractere é um delimitador de fechamento
-int ehFechamento(char c)
+int fechamento(char c)
 {
-    return c == ')' || c == ']' || c == '}';
+    if (c == ')' || c == ']' || c == '}')
+    {
+        return 1; // É um delimitador de fechamento
+    }
+    else
+        return 0; // Não é um delimitador de fevhamento
 }
 
 // Função auxiliar para verificar se os delimitadores correspondem
 int corresponde(char abertura, char fechamento)
 {
-    return (abertura == '(' && fechamento == ')') ||
-           (abertura == '[' && fechamento == ']') ||
-           (abertura == '{' && fechamento == '}');
+    if (abertura == '(' && fechamento == ')')
+    {
+        return 1;
+    }
+    else if (abertura == '[' && fechamento == ']')
+    {
+        return 1;
+    }
+    else if (abertura == '{' && fechamento == '}')
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 // Problema 1 a) - Verifica apenas o fechamento correto dos delimitadores
@@ -43,11 +65,11 @@ int verificaFechamento(char *expressao)
     {
         char c = expressao[i];
 
-        if (ehAbertura(c))
+        if (abertura(c))
         {
             empilhar(p, (Generico)(size_t)c);
         }
-        else if (ehFechamento(c))
+        else if (fechamento(c))
         {
             if (verificaPilhaVazia(p))
             {
@@ -63,7 +85,6 @@ int verificaFechamento(char *expressao)
             }
         }
     }
-    // Teste 1
     //  Se a pilha não estiver vazia no final, faltaram fechamentos
     if (!verificaPilhaVazia(p))
     {
@@ -75,6 +96,7 @@ int verificaFechamento(char *expressao)
 }
 
 // Problema 1 b) - Verifica a precedência dos delimitadores
+
 int verificaPrecedencia(char *expressao)
 {
     Pilha *p = criaPilha();
@@ -84,40 +106,11 @@ int verificaPrecedencia(char *expressao)
     {
         char c = expressao[i];
 
-        if (ehAbertura(c))
+        if (abertura(c))
         {
-            // Verificação estrita da hierarquia
-            if (!verificaPilhaVazia(p))
-            {
-                char topo = (char)(size_t)valorTopo(p);
-
-                // Só permitir:
-                // - { como primeiro nível
-                // - [ somente dentro de {
-                // - ( somente dentro de [
-                if (c == '[' && topo != '{')
-                {
-                    resultado = 0;
-                    break;
-                }
-                if (c == '(' && topo != '[')
-                {
-                    resultado = 0;
-                    break;
-                }
-            }
-            else
-            {
-                // Se a pilha está vazia, só pode começar com {
-                if (c != '{')
-                {
-                    resultado = 0;
-                    break;
-                }
-            }
             empilhar(p, (Generico)(size_t)c);
         }
-        else if (ehFechamento(c))
+        else if (fechamento(c))
         {
             if (verificaPilhaVazia(p))
             {
@@ -150,7 +143,7 @@ int expressaoValida(char *expressao)
     {
         char c = expressao[i];
         if (!(isalpha(c) && toupper(c) >= 'A' && toupper(c) <= 'J') &&                 // A-J
-            !(c == '+' || c == '-' || c == '/' || c == '*' || c == '~') &&             // operadores
+            !(c == '+' || c == '-' || c == '/' || c == '*' || c == '^') &&             // operadores
             !(c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}') && // delimitadores
             !isspace(c))
         { // espaços são permitidos
@@ -162,7 +155,7 @@ int expressaoValida(char *expressao)
 
 int main()
 {
-    char expressao[1000];
+    // char expressao[1000];
     int op;
 
     for (int i = 0; i < 3; i++)
@@ -174,6 +167,21 @@ int main()
         printf("Digite a expressão matemática (use A-J como variáveis):\n");
         fgets(expressao, sizeof(expressao), stdin);
         expressao[strcspn(expressao, "\n")] = '\0'; // Remove o \n do final
+
+        int contemAlgo = 0;
+        for (int j = 0; expressao[j] != '\0'; j++)
+        {
+            if (!isspace(expressao[j]))
+            {
+                contemAlgo = 1;
+                break;
+            }
+        }
+        if (!contemAlgo)
+        {
+            printf("Expressão inválida: está vazia ou contém apenas espaços.\n");
+            return 1;
+        }
 
         // Verifica se a expressão contém apenas caracteres válidos
         if (!expressaoValida(expressao))
