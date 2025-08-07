@@ -63,8 +63,8 @@ int verificaFechamento(char *expressao)
             }
         }
     }
-
-    // Se a pilha não estiver vazia no final, faltaram fechamentos
+    // Teste 1
+    //  Se a pilha não estiver vazia no final, faltaram fechamentos
     if (!verificaPilhaVazia(p))
     {
         resultado = 0;
@@ -164,9 +164,11 @@ int main()
 {
     char expressao[1000];
     int op;
-    
-    for(int i=0; i<3; i++) {
-        if (i == 4){
+
+    for (int i = 0; i < 3; i++)
+    {
+        if (i == 4)
+        {
             break;
         }
         printf("Digite a expressão matemática (use A-J como variáveis):\n");
