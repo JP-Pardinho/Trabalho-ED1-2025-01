@@ -15,22 +15,18 @@ char expressao[MAX_EXPRESSAO];
 // Função auxiliar para verificar se um caractere é um delimitador de abertura
 int abertura(char c)
 {
-    if (c == '(' || c == '[' || c == '{')
-    {
+    if (c == '(' || c == '[' || c == '{'){
         return 1; // É um delimitador de abertura
     }
-    else
         return 0; // Não é um delimitador de abertura
 }
 
 // Função auxiliar para verificar se um caractere é um delimitador de fechamento
 int fechamento(char c)
 {
-    if (c == ')' || c == ']' || c == '}')
-    {
+    if (c == ')' || c == ']' || c == '}'){
         return 1; // É um delimitador de fechamento
     }
-    else
         return 0; // Não é um delimitador de fevhamento
 }
 
@@ -49,10 +45,7 @@ int corresponde(char abertura, char fechamento)
     {
         return 1;
     }
-    else
-    {
-        return 0;
-    }
+    return 0; 
 }
 
 // Problema 1 a) - Verifica apenas o fechamento correto dos delimitadores
