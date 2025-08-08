@@ -14,3 +14,14 @@ void EntradaExpressoes(){
 void imprimePilha(Pilha p){
     // printa os valores da pilha
 }
+
+
+char letras = [A, B, C, D, E, F, G, H, I, J];
+
+for(int i = 0; i < 10; i++){
+    for(int j = 0; j < 10; j++){
+
+    }
+
+}
+

@@ -23,7 +23,6 @@ typedef struct pilha
     int tamanho;
 }Pilha;
 
-
 // Cria um nó generico
 No* criaNo(Generico valor);
 
@@ -47,7 +46,5 @@ int verificaPilhaVazia(Pilha* p);
 
 // Retorna o tamanho atual da pilha
 int tamanhoPilha(Pilha* p);
-
-
 
 #endif
