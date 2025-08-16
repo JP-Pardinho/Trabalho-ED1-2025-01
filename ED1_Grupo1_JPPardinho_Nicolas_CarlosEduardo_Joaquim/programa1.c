@@ -5,9 +5,9 @@
 
 #include "Pilha.h"
 
+//Para inserir mais caracteres basta mudar a variavel global MAX_EXPRESSAO
 #define MAX_EXPRESSAO 10000
 
-char expressao[MAX_EXPRESSAO];
 
 // Função para verificar se é um caractere abertura
 int abertura(char c){
@@ -155,60 +155,54 @@ int expressaoValida(char *expressao)
 
 int main()
 {
-    //Para inserir mais caracteres basta mudar a variavel global MAX_EXPRESSAO
-    int op;
+    char expressao[MAX_EXPRESSAO];
+    // char *expressao[MAX_EXPRESSAO];
 
-    for (int i = 0; i < 3; i++)
+    printf("Digite a expressão matemática (apenas A-J de variaveis):\n");
+    fgets(expressao, sizeof(expressao), stdin);
+    expressao[strcspn(expressao, "\n")] = '\0';
+
+    int contemAlgo = 0;
+    for (int j = 0; expressao[j] != '\0'; j++)
     {
-        if (i == 4)
+        if (!isspace(expressao[j]))
         {
+            contemAlgo = 1;
             break;
         }
-        printf("Digite a expressão matemática (apenas A-J de variaveis):\n");
-        fgets(expressao, sizeof(expressao), stdin);
-        expressao[strcspn(expressao, "\n")] = '\0';
-
-        int contemAlgo = 0;
-        for (int j = 0; expressao[j] != '\0'; j++)
-        {
-            if (!isspace(expressao[j]))
-            {
-                contemAlgo = 1;
-                break;
-            }
-        }
-        if (!contemAlgo)
-        {
-            printf("Expressão inválida: está vazia ou contém apenas espaços.\n");
-            return 1;
-        }
-
-        if (!expressaoValida(expressao))
-        {
-            printf("Expressão inválida: contém caracteres não permitidos.\n");
-            return 1;
-        }
-
-        int validoA = verificaFechamento(expressao);
-
-        int validoB = verificaPrecedencia(expressao);
-
-        printf("\nResultados da validação:\n");
-        printf("a) Fechamento correto: %s\n", validoA ? "VÁLIDO" : "INVÁLIDO");
-        printf("b) Precedência correta: %s\n", validoB ? "VÁLIDO" : "INVÁLIDO");
-
-        if (validoA && validoB)
-        {
-            printf("\nA expressão é válida para os dois critérios!\n");
-        }
-        else if (validoA)
-        {
-            printf("\nA expressão é válida apenas para o critério A.\n");
-        }
-        else
-        {
-            printf("\nA expressão é inválida para os dois critérios.\n");
-        }
     }
+    if (!contemAlgo)
+    {
+        printf("Expressão inválida: está vazia ou contém apenas espaços.\n");
+        return 1;
+    }
+
+    if (!expressaoValida(expressao))
+    {
+        printf("Expressão inválida: contém caracteres não permitidos.\n");
+        return 1;
+    }
+
+    int validoA = verificaFechamento(expressao);
+
+    int validoB = verificaPrecedencia(expressao);
+
+    printf("\nResultados da validação:\n");
+    printf("a) Fechamento correto: %s\n", validoA ? "VÁLIDO" : "INVÁLIDO");
+    printf("b) Precedência correta: %s\n", validoB ? "VÁLIDO" : "INVÁLIDO");
+
+    if (validoA && validoB)
+    {
+        printf("\nA expressão '%s' é válida para os dois critérios!\n", expressao);
+    }
+    else if (validoA)
+    {
+        printf("\nA expressão '%s' é válida apenas para o critério A.\n", expressao);
+    }
+    else
+    {
+        printf("\nA expressão '%s' é inválida para os dois critérios.\n", expressao);
+    }
+    
     return 0;
 }
