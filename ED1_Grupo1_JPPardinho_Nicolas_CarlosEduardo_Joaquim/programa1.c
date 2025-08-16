@@ -167,7 +167,7 @@ int main()
         {
             break;
         }
-        printf("Digite a expressão matemática (use A-J como variáveis):\n");
+        printf("Digite a expressão matemática (apenas A-J de variaveis):\n");
         fgets(expressao, sizeof(expressao), stdin);
         expressao[strcspn(expressao, "\n")] = '\0';
 
@@ -202,15 +202,15 @@ int main()
 
         if (validoA && validoB)
         {
-            printf("\nA expressão é totalmente válida para ambos os critérios!\n");
+            printf("\nA expressão é válida para os dois critérios!\n");
         }
         else if (validoA)
         {
-            printf("\nA expressão é válida apenas para o critério a) (fechamento correto).\n");
+            printf("\nA expressão é válida apenas para o critério A.\n");
         }
         else
         {
-            printf("\nA expressão é inválida para ambos os critérios.\n");
+            printf("\nA expressão é inválida para os dois critérios.\n");
         }
     }
     return 0;
