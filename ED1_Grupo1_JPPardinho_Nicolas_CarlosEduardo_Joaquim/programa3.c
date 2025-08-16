@@ -26,28 +26,23 @@ int contarComodos(char planta[MAX][MAX], int n, int m) {
     int visitado[MAX][MAX] = {0};
     int contador = 0;
     
-    // Inicializa a pilha
     Pilha* pilha = criaPilha();
     
-    // Percorre toda a matriz
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < m; j++) {
-            // Se encontrou um piso não visitado, é um novo cômodo
+
             if (planta[i][j] == '.' && !visitado[i][j]) {
                 contador++;
                 
-                // Marca como visitado e empilha
                 visitado[i][j] = 1;
                 Posicao* pos = (Posicao*)malloc(sizeof(Posicao));
                 pos->linha = i;
                 pos->coluna = j;
                 empilhar(pilha, pos);
                 
-                // DFS usando pilha
                 while (!verificaPilhaVazia(pilha)) {
                     Posicao* atual = (Posicao*)desempilhar(pilha);
                     
-                    // Verifica todas as direções possíveis
                     int dx[] = {-1, 1, 0, 0};
                     int dy[] = {0, 0, -1, 1};
                     
@@ -69,7 +64,6 @@ int contarComodos(char planta[MAX][MAX], int n, int m) {
         }
     }
     
-    // Libera a memória da pilha
     destroiPilha(&pilha);
     
     return contador;
@@ -79,15 +73,12 @@ int main() {
     int n, m;
     char planta[MAX][MAX];
     
-    // Lê as dimensões da planta
     scanf("%d %d", &n, &m);
     
-    // Lê a planta linha por linha
     for (int i = 0; i < n; i++) {
         scanf("%s", planta[i]);
     }
     
-    // Conta os cômodos e imprime o resultado
     int comodos = contarComodos(planta, n, m);
     printf("%d\n", comodos);
     

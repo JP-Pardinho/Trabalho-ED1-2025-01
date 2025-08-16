@@ -5,38 +5,30 @@
 
 #include "Pilha.h"
 
-// Função para limpar o buffer de entrada (evita loops infinitos em caso de input inválido)
-void limparBufferEntrada() {
+// Limpa o buffer de entrada do teclado.
+void limparBufferEntrada(){
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+// Pede ao usuario os valores para as variaveis de A a J.
 void obterValoresLiterais(double valores[]) {
     printf("--- Entrada dos valores das literais (A-J) ---\n");
     for (char c = 'A'; c <= 'J'; c++) {
-        // Loop para a literal ATUAL. Só sairá quando uma entrada válida for fornecida.
         while (1) {
             printf("Digite o valor para %c: ", c);
-
-            // Tenta ler um valor double.
-            // Se scanf retornar 1, a leitura foi um sucesso.
-            if (scanf("%lf", &valores[c - 'A']) == 1) {
-                // Limpa o restante da linha no buffer, caso o usuário
-                // tenha digitado algo a mais (ex: "12.5 extra").
+            if (scanf("%lf", &valores[c - 'A']) == 1){
                 limparBufferEntrada();
-                break; // Entrada válida, sai do loop e vai para a próxima letra.
+                break;
             } else {
-                // Se a leitura falhar, informa o erro.
                 printf("\nERRO: Entrada invalida. Por favor, insira apenas valores numericos.\n");
-                // Limpa o buffer para remover a entrada inválida (ex: "texto").
                 limparBufferEntrada();
-                // O loop continuará, pedindo o valor para a mesma letra novamente.
             }
         }
     }
 }
 
-
+// Retorna a precedencia do operador.
 int obterPrecedencia(char op){
     switch (op){
     case '^':
@@ -52,27 +44,27 @@ int obterPrecedencia(char op){
     }
 }
 
+// Verifica se um caractere e um operador valido.
 int ehOperador(char c){
     if (c == '+'|| c == '*'|| c == '/' || c == '-' || c == '^'){
-        return 1; // É um operador
+        return 1;
     }
     return 0;
 }
 
-// Nova função para validar os caracteres da expressão
+// Valida se um caractere e permitido. Encerra o programa em caso de erro.
 void validarCaractere(char c) {
-    // Permite letras (A-J), operadores, parênteses e espaços
     if (!isalpha(c) && !ehOperador(c) && c != '(' && c != ')' && !isspace(c)) {
         printf("\nERRO: A expressao contem um caractere invalido: '%c'.\n", c);
         exit(1);
     }
-    // Garante que apenas as literais definidas (A-J) sejam usadas
     if (isalpha(c) && toupper(c) > 'J') {
-        printf("\nERRO: Literal '%c' invalida. Use apenas letras de A a J.\n", c);
+        printf("\nERRO: caractere '%c' invalida. Use apenas letras de A a J.\n", c);
         exit(1);
     }
 }
 
+// Converte uma expressao da notacao infixa para a posfixa.
 void infixaParaPosfixa(const char *infixa, char *posfixa){
     Pilha *p = criaPilha();
     int j = 0;
@@ -80,13 +72,11 @@ void infixaParaPosfixa(const char *infixa, char *posfixa){
     for (int i = 0; infixa[i] != '\0'; i++){
         char expressao = infixa[i];
 
-        // Valida cada caractere da expressão
         validarCaractere(expressao);
 
         if (isspace(expressao))
             continue;
 
-        // Converte para maiúscula para tratar A e a da mesma forma
         char caractereUpper = toupper(expressao);
 
         if (isalpha(caractereUpper)){
@@ -98,14 +88,14 @@ void infixaParaPosfixa(const char *infixa, char *posfixa){
             empilhar(p, expressaoP);
         }
         else if (caractereUpper == ')'){
-            while (!verificaPilhaVazia(p) && *(char *)valorTopo(p) != '('){
+            while (!verificaPilhaVazia(p) && *(char *)valorTopo(p) != '(') {
                 char *op = (char *)desempilhar(p);
                 posfixa[j++] = *op;
                 free(op);
             }
-            if (!verificaPilhaVazia(p)){ // Remove o '(' da pilha
+            if (!verificaPilhaVazia(p)){ 
                 free(desempilhar(p));
-            } else { // Se a pilha estiver vazia, os parênteses não estão balanceados
+            } else { 
                 printf("\nERRO: Expressao com parenteses desbalanceados.\n");
                 exit(1);
             }
@@ -126,7 +116,6 @@ void infixaParaPosfixa(const char *infixa, char *posfixa){
 
     while (!verificaPilhaVazia(p)){
         char *op = (char *)desempilhar(p);
-        // Se encontrar um parêntese aqui, a expressão estava desbalanceada
         if (*op == '(') {
             printf("\nERRO: Expressao com parenteses desbalanceados.\n");
             exit(1);
@@ -139,6 +128,7 @@ void infixaParaPosfixa(const char *infixa, char *posfixa){
     destroiPilha(&p);
 }
 
+// Avalia uma expressao posfixa e retorna o resultado numerico.
 double avaliarPosfixa(const char *posfixa, double valores[]){
     Pilha *p = criaPilha();
     double resultado = 0.0;
@@ -146,7 +136,6 @@ double avaliarPosfixa(const char *posfixa, double valores[]){
     for (int i = 0; posfixa[i] != '\0'; i++){
         char expressao = posfixa[i];
 
-        // Valida cada caractere da expressão
         validarCaractere(expressao);
 
         if (isspace(expressao))
@@ -163,9 +152,8 @@ double avaliarPosfixa(const char *posfixa, double valores[]){
             double *valor2P = (double *)desempilhar(p);
             double *valor1P = (double *)desempilhar(p);
 
-            // ERRO: Faltam operandos para o operador
             if (valor1P == NULL || valor2P == NULL){
-                printf("\nERRO: A expressao posfixa e invalida (faltam operandos para um operador).\n");
+                printf("\nERRO: Faltam operandos para um operador.\n");
                 exit(1);
             }
 
@@ -174,7 +162,6 @@ double avaliarPosfixa(const char *posfixa, double valores[]){
             free(valor1P);
             free(valor2P);
 
-            // ERRO: Tentativa de divisão por zero
             if (caractereUpper == '/' && valor2 == 0) {
                 printf("\nERRO: Divisao por zero nao permitida.\n");
                 exit(1);
@@ -194,9 +181,8 @@ double avaliarPosfixa(const char *posfixa, double valores[]){
 
     double *resultadoFinalP = (double *)desempilhar(p);
 
-    // ERRO: Se a pilha não estiver vazia após a operação final, há operandos em excesso
     if (!verificaPilhaVazia(p) || resultadoFinalP == NULL) {
-        printf("\nERRO: A expressao posfixa e invalida (excesso de operandos ou expressao vazia).\n");
+        printf("\nERRO: A expressao posfixa e invalida.\n");
         exit(1);
     }
     
@@ -208,15 +194,13 @@ double avaliarPosfixa(const char *posfixa, double valores[]){
 }
 
 int main(){
-    double valores[10]; // Armazena valores para literais de A a J
+    double valores[10];
     char expressaoInfixa[256];
     char expressaoPosfixa[256];
     int escolha;
 
-    // 1. Entrada dos valores das literais
     obterValoresLiterais(valores);
     
-    // 2. Escolha do formato da expressão
     printf("\nEscolha o formato da expressao:\n");
     printf("1. Expressao Infixa\n");
     printf("2. Expressao Posfixa\n");
@@ -231,15 +215,13 @@ int main(){
         }
     }
 
-    limparBufferEntrada(); // Limpa o buffer após o scanf do número
-
+    limparBufferEntrada();
     memset(expressaoPosfixa, 0, sizeof(expressaoPosfixa));
-
 
     if (escolha == 1){
         printf("\nDigite a expressao infixa: \n");
         fgets(expressaoInfixa, sizeof(expressaoInfixa), stdin);
-        expressaoInfixa[strcspn(expressaoInfixa, "\n")] = 0; // Remove a nova linha
+        expressaoInfixa[strcspn(expressaoInfixa, "\n")] = 0;
 
         if (strlen(expressaoInfixa) == 0) {
             printf("\nERRO: Nenhuma expressao foi digitada.\n");
@@ -252,20 +234,18 @@ int main(){
     else if (escolha == 2){
         printf("\nDigite a expressao posfixa: \n");
         fgets(expressaoPosfixa, sizeof(expressaoPosfixa), stdin);
-        expressaoPosfixa[strcspn(expressaoPosfixa, "\n")] = 0; // Remove a nova linha
+        expressaoPosfixa[strcspn(expressaoPosfixa, "\n")] = 0; 
     }
     else{
         printf("\nERRO: Opcao invalida. Escolha 1 para Infixa ou 2 para Posfixa.\n");
         return 1;
     }
 
-    // 3. Avaliação da expressão posfixa e impressão do resultado
     if (strlen(expressaoPosfixa) > 0){
         double resultado = avaliarPosfixa(expressaoPosfixa, valores);
         printf("\nResultado da expressao: %.2lf\n", resultado);
     }
     else{
-        // Este caso agora é mais difícil de acontecer devido às validações, mas é mantido por segurança
         printf("\nNenhuma expressao valida para avaliar.\n");
     }
 

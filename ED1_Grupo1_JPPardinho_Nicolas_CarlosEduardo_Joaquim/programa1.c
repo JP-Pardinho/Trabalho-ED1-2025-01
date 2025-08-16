@@ -8,7 +8,6 @@
 //Para inserir mais caracteres basta mudar a variavel global MAX_EXPRESSAO
 #define MAX_EXPRESSAO 10000
 
-
 // Função para verificar se é um caractere abertura
 int abertura(char c){
     if (c == '(' || c == '[' || c == '{'){
@@ -40,20 +39,17 @@ int corresponde(char abertura, char fechamento){
 }
 
 //Verifica se está sendo fechado direito
-int verificaFechamento(char *expressao)
-{
+int verificaFechamento(char *expressao){
     Pilha *p = criaPilha();
     int resultado = 1; 
 
-    for (int i = 0; expressao[i] != '\0'; i++)
-    {
+    for (int i = 0; expressao[i] != '\0'; i++){
         char c = expressao[i];
 
-        if (abertura(c))
-        {
+        if (abertura(c)){
             // Aloca a memória para guardar um char
             char* ponteiroC = (char*) malloc(sizeof(char));
-            if (ponteiroC == NULL) {
+            if (ponteiroC == NULL){
                 printf("Erro de alocacao de memoria!\n");
                 exit(1); 
             }
@@ -63,10 +59,8 @@ int verificaFechamento(char *expressao)
             //Empilha o PONTEIRO para a memória alocada
             empilhar(p, (Generico)ponteiroC); 
         }
-        else if (fechamento(c))
-        {
-            if (verificaPilhaVazia(p))
-            {
+        else if (fechamento(c)){
+            if (verificaPilhaVazia(p)){
                 resultado = 0;
                 break;
             }
@@ -77,8 +71,7 @@ int verificaFechamento(char *expressao)
             //LIBERA a memória que foi alocada para aquele char
             free(topoP);
 
-            if (!corresponde(topo, c))
-            {
+            if (!corresponde(topo, c)){
                 resultado = 0;
                 break;
             }
@@ -87,11 +80,10 @@ int verificaFechamento(char *expressao)
 
     //Se a pilha não estiver vazia no final, faltaram fechamentos.
     //limpa a memória de qualquer item que sobrou
-    if (!verificaPilhaVazia(p))
-    {
+    if (!verificaPilhaVazia(p)){
         resultado = 0;
         //Laço para limpar a memória restante e evitar vazamento(GPT que fez)
-        while(!verificaPilhaVazia(p)) {
+        while(!verificaPilhaVazia(p)){
             char* restoP = (char*)desempilhar(p);
             free(restoP);
         }
@@ -102,7 +94,6 @@ int verificaFechamento(char *expressao)
 }
 
 //Verifica a precedência dos delimitadores
-
 int verificaPrecedencia(char *expressao){
     Pilha *p = criaPilha();
     int resultado = 1;
@@ -127,8 +118,7 @@ int verificaPrecedencia(char *expressao){
         }
     }
 
-    if (!verificaPilhaVazia(p))
-    {
+    if (!verificaPilhaVazia(p)){
         resultado = 0;
     }
 
@@ -137,8 +127,7 @@ int verificaPrecedencia(char *expressao){
 }
 
 //Função que verifica se a expressão contém apenas caracteres válidos
-int expressaoValida(char *expressao)
-{
+int expressaoValida(char *expressao){
     for (int i = 0; expressao[i] != '\0'; i++)
     {
         char c = expressao[i];
@@ -153,32 +142,27 @@ int expressaoValida(char *expressao)
     return 1;
 }
 
-int main()
-{
+int main(){
     char expressao[MAX_EXPRESSAO];
-    // char *expressao[MAX_EXPRESSAO];
 
     printf("Digite a expressão matemática (apenas A-J de variaveis):\n");
     fgets(expressao, sizeof(expressao), stdin);
     expressao[strcspn(expressao, "\n")] = '\0';
 
     int contemAlgo = 0;
-    for (int j = 0; expressao[j] != '\0'; j++)
-    {
+    for (int j = 0; expressao[j] != '\0'; j++){
         if (!isspace(expressao[j]))
         {
             contemAlgo = 1;
             break;
         }
     }
-    if (!contemAlgo)
-    {
+    if (!contemAlgo){
         printf("Expressão inválida: está vazia ou contém apenas espaços.\n");
         return 1;
     }
 
-    if (!expressaoValida(expressao))
-    {
+    if (!expressaoValida(expressao)){
         printf("Expressão inválida: contém caracteres não permitidos.\n");
         return 1;
     }
@@ -191,16 +175,13 @@ int main()
     printf("a) Fechamento correto: %s\n", validoA ? "VÁLIDO" : "INVÁLIDO");
     printf("b) Precedência correta: %s\n", validoB ? "VÁLIDO" : "INVÁLIDO");
 
-    if (validoA && validoB)
-    {
+    if (validoA && validoB){
         printf("\nA expressão '%s' é válida para os dois critérios!\n", expressao);
     }
-    else if (validoA)
-    {
+    else if (validoA){
         printf("\nA expressão '%s' é válida apenas para o critério A.\n", expressao);
     }
-    else
-    {
+    else{
         printf("\nA expressão '%s' é inválida para os dois critérios.\n", expressao);
     }
     
