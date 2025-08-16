@@ -12,47 +12,41 @@
 
 char expressao[MAX_EXPRESSAO];
 
-// Função auxiliar para verificar se um caractere é um delimitador de abertura
-int abertura(char c)
-{
+// Função para verificar se é um caractere abertura
+int abertura(char c){
     if (c == '(' || c == '[' || c == '{'){
-        return 1; // É um delimitador de abertura
+        return 1; // É um caractere de abertura
     }
-        return 0; // Não é um delimitador de abertura
+        return 0; // Não é um caractere de abertura
 }
 
-// Função auxiliar para verificar se um caractere é um delimitador de fechamento
-int fechamento(char c)
-{
+// Função para verificar se é um caractere fechamento
+int fechamento(char c){
     if (c == ')' || c == ']' || c == '}'){
-        return 1; // É um delimitador de fechamento
+        return 1; // É um um caractere de fechamento
     }
-        return 0; // Não é um delimitador de fevhamento
+        return 0; // Não é um caractere de fechamento
 }
 
-// Função auxiliar para verificar se os delimitadores correspondem
-int corresponde(char abertura, char fechamento)
-{
-    if (abertura == '(' && fechamento == ')')
-    {
+// Função para verificar se a abertura corresponde com o fechamento
+int corresponde(char abertura, char fechamento){
+    if (abertura == '(' && fechamento == ')'){
         return 1;
     }
-    else if (abertura == '[' && fechamento == ']')
-    {
+    else if (abertura == '[' && fechamento == ']'){
         return 1;
     }
-    else if (abertura == '{' && fechamento == '}')
-    {
+    else if (abertura == '{' && fechamento == '}'){
         return 1;
     }
     return 0; 
 }
 
-// Problema 1 a) - Verifica apenas o fechamento correto dos delimitadores
+//Verifica se está sendo fechado direito
 int verificaFechamento(char *expressao)
 {
     Pilha *p = criaPilha();
-    int resultado = 1; // Assume que é válido inicialmente
+    int resultado = 1; 
 
     for (int i = 0; expressao[i] != '\0'; i++)
     {
@@ -60,7 +54,17 @@ int verificaFechamento(char *expressao)
 
         if (abertura(c))
         {
-            empilhar(p, (Generico)(size_t)c);
+            // Aloca a memória para guardar um char
+            char* ponteiroC = (char*) malloc(sizeof(char));
+            if (ponteiroC == NULL) {
+                printf("Erro de alocacao de memoria!\n");
+                exit(1); 
+            }
+            //Guarda o valor do char na memória
+            *ponteiroC = c;
+
+            //Empilha o PONTEIRO para a memória alocada
+            empilhar(p, (Generico)ponteiroC); 
         }
         else if (fechamento(c))
         {
@@ -69,8 +73,13 @@ int verificaFechamento(char *expressao)
                 resultado = 0;
                 break;
             }
+            //Desempilha o PONTEIRO
+            char* topoP = (char*)desempilhar(p);
+            //Pega o VALOR que está no endereço apontado pelo ponteiro
+            char topo = *topoP; 
+            //LIBERA a memória que foi alocada para aquele char
+            free(topoP);
 
-            char topo = (char)(size_t)desempilhar(p);
             if (!corresponde(topo, c))
             {
                 resultado = 0;
@@ -78,42 +87,43 @@ int verificaFechamento(char *expressao)
             }
         }
     }
-    //  Se a pilha não estiver vazia no final, faltaram fechamentos
+
+    //Se a pilha não estiver vazia no final, faltaram fechamentos.
+    //limpa a memória de qualquer item que sobrou
     if (!verificaPilhaVazia(p))
     {
         resultado = 0;
+        //Laço para limpar a memória restante e evitar vazamento(GPT que fez)
+        while(!verificaPilhaVazia(p)) {
+            char* restoP = (char*)desempilhar(p);
+            free(restoP);
+        }
     }
 
     destroiPilha(&p);
     return resultado;
 }
 
-// Problema 1 b) - Verifica a precedência dos delimitadores
+//Verifica a precedência dos delimitadores
 
-int verificaPrecedencia(char *expressao)
-{
+int verificaPrecedencia(char *expressao){
     Pilha *p = criaPilha();
     int resultado = 1;
 
-    for (int i = 0; expressao[i] != '\0'; i++)
-    {
+    for (int i = 0; expressao[i] != '\0'; i++){
         char c = expressao[i];
 
-        if (abertura(c))
-        {
+        if (abertura(c)){
             empilhar(p, (Generico)(size_t)c);
         }
-        else if (fechamento(c))
-        {
-            if (verificaPilhaVazia(p))
-            {
+        else if (fechamento(c)){
+            if (verificaPilhaVazia(p)){
                 resultado = 0;
                 break;
             }
 
             char topo = (char)(size_t)desempilhar(p);
-            if (!corresponde(topo, c))
-            {
+            if (!corresponde(topo, c)){
                 resultado = 0;
                 break;
             }
@@ -129,17 +139,17 @@ int verificaPrecedencia(char *expressao)
     return resultado;
 }
 
-// Função para verificar se a expressão contém apenas caracteres válidos
+//Função que verifica se a expressão contém apenas caracteres válidos
 int expressaoValida(char *expressao)
 {
     for (int i = 0; expressao[i] != '\0'; i++)
     {
         char c = expressao[i];
-        if (!(isalpha(c) && toupper(c) >= 'A' && toupper(c) <= 'J') &&                 // A-J
-            !(c == '+' || c == '-' || c == '/' || c == '*' || c == '^') &&             // operadores
-            !(c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}') && // delimitadores
+        if (!(isalpha(c) && toupper(c) >= 'A' && toupper(c) <= 'J') &&                 
+            !(c == '+' || c == '-' || c == '/' || c == '*' || c == '^') &&             
+            !(c == '(' || c == ')' || c == '[' || c == ']' || c == '{' || c == '}') && 
             !isspace(c))
-        { // espaços são permitidos
+        {
             return 0;
         }
     }
@@ -148,7 +158,7 @@ int expressaoValida(char *expressao)
 
 int main()
 {
-    // char expressao[1000];
+    //Para inserir mais caracteres basta mudar a variavel global MAX_EXPRESSAO
     int op;
 
     for (int i = 0; i < 3; i++)
@@ -159,7 +169,7 @@ int main()
         }
         printf("Digite a expressão matemática (use A-J como variáveis):\n");
         fgets(expressao, sizeof(expressao), stdin);
-        expressao[strcspn(expressao, "\n")] = '\0'; // Remove o \n do final
+        expressao[strcspn(expressao, "\n")] = '\0';
 
         int contemAlgo = 0;
         for (int j = 0; expressao[j] != '\0'; j++)
@@ -176,17 +186,14 @@ int main()
             return 1;
         }
 
-        // Verifica se a expressão contém apenas caracteres válidos
         if (!expressaoValida(expressao))
         {
             printf("Expressão inválida: contém caracteres não permitidos.\n");
             return 1;
         }
 
-        // Verificação a) - apenas fechamento correto
         int validoA = verificaFechamento(expressao);
 
-        // Verificação b) - precedência dos delimitadores
         int validoB = verificaPrecedencia(expressao);
 
         printf("\nResultados da validação:\n");

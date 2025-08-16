@@ -30,7 +30,7 @@ int obterPrecedencia(char op){
     case '-':
         return 1;
     default:
-        return 0; // Para parênteses
+        return 0; 
     }
 }
 
@@ -38,7 +38,6 @@ int ehOperador(char c){
     if (c == '+'|| c == '*'|| c == '/' || c == '-' || c == '^'){
         return 1; // É um operador
     }
-   
     return 0;
 }
 
@@ -157,10 +156,8 @@ int main(){
     char expressaoInfixa[256];
     char expressaoPosfixa[256];
     int escolha;
-
     // 1. Entrada dos valores das literais
     obterValoresLiterais(valores);
-
     // 2. Escolha do formato da expressão
     printf("\nEscolha o formato da expressao:\n");
     printf("1. Expressao Infixa\n");
@@ -168,8 +165,7 @@ int main(){
     printf("Opcao: ");
     scanf("%d", &escolha);
 
-    while (getchar() != '\n')
-        ;
+    while (getchar() != '\n');
 
     memset(expressaoPosfixa, 0, sizeof(expressaoPosfixa));
 
@@ -190,7 +186,6 @@ int main(){
         printf("Opcao invalida!\n");
         return 1;
     }
-
     // 3. Avaliação da expressão posfixa e impressão do resultado
     if (strlen(expressaoPosfixa) > 0){
         double resultado = avaliarPosfixa(expressaoPosfixa, valores);
