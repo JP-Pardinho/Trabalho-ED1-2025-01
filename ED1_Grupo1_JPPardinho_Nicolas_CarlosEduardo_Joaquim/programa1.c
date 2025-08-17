@@ -78,11 +78,9 @@ int verificaFechamento(char *expressao){
         }
     }
 
-    //Se a pilha não estiver vazia no final, faltaram fechamentos.
     //limpa a memória de qualquer item que sobrou
     if (!verificaPilhaVazia(p)){
         resultado = 0;
-        //Laço para limpar a memória restante e evitar vazamento(GPT que fez)
         while(!verificaPilhaVazia(p)){
             char* restoP = (char*)desempilhar(p);
             free(restoP);
