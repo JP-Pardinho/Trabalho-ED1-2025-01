@@ -8,6 +8,7 @@
 //Para inserir mais caracteres basta mudar a variavel global MAX_EXPRESSAO
 #define MAX_EXPRESSAO 10000
 
+
 // Função para verificar se é um caractere abertura
 int abertura(char c){
     if (c == '(' || c == '[' || c == '{'){
@@ -48,16 +49,16 @@ int verificaFechamento(char *expressao){
 
         if (abertura(c)){
             // Aloca a memória para guardar um char
-            char* ponteiroC = (char*) malloc(sizeof(char));
-            if (ponteiroC == NULL){
+            char* ponteiroAtual = (char*) malloc(sizeof(char));
+            if (ponteiroAtual == NULL){
                 printf("Erro de alocacao de memoria!\n");
                 exit(1); 
             }
             //Guarda o valor do char na memória
-            *ponteiroC = c;
+            *ponteiroAtual = c;
 
             //Empilha o PONTEIRO para a memória alocada
-            empilhar(p, (Generico)ponteiroC); 
+            empilhar(p, (Generico)ponteiroAtual); 
         }
         else if (fechamento(c)){
             if (verificaPilhaVazia(p)){
@@ -78,9 +79,11 @@ int verificaFechamento(char *expressao){
         }
     }
 
+    //Se a pilha não estiver vazia no final, faltaram fechamentos.
     //limpa a memória de qualquer item que sobrou
     if (!verificaPilhaVazia(p)){
         resultado = 0;
+        //Laço para limpar a memória restante e evitar vazamento(GPT que fez)
         while(!verificaPilhaVazia(p)){
             char* restoP = (char*)desempilhar(p);
             free(restoP);
@@ -97,19 +100,36 @@ int verificaPrecedencia(char *expressao){
     int resultado = 1;
 
     for (int i = 0; expressao[i] != '\0'; i++){
-        char c = expressao[i];
+        char atual = expressao[i];
 
-        if (abertura(c)){
-            empilhar(p, (Generico)(size_t)c);
+        if (abertura(atual)){
+            if (!verificaPilhaVazia(p)) {
+                char topo = *(char*)valorTopo(p);
+                if (topo == '(' && (atual == '[' || atual == '{')) {
+                    resultado = 0;
+                    break;
+                }
+                if (topo == '[' && atual == '{') {
+                    resultado = 0;
+                    break;
+                }
+            }
+            char* ponteiroAtual = (char*) malloc(sizeof(char));
+            if (ponteiroAtual == NULL) exit(1);
+            *ponteiroAtual = atual;
+            empilhar(p, (Generico)ponteiroAtual);
         }
-        else if (fechamento(c)){
+        else if (fechamento(atual)){
             if (verificaPilhaVazia(p)){
                 resultado = 0;
                 break;
             }
+            
+            char* topoP = (char*)desempilhar(p);
+            char topo = *topoP;
+            free(topoP);
 
-            char topo = (char)(size_t)desempilhar(p);
-            if (!corresponde(topo, c)){
+            if (!corresponde(topo, atual)){
                 resultado = 0;
                 break;
             }
@@ -118,6 +138,9 @@ int verificaPrecedencia(char *expressao){
 
     if (!verificaPilhaVazia(p)){
         resultado = 0;
+        while(!verificaPilhaVazia(p)){
+            free(desempilhar(p));
+        }
     }
 
     destroiPilha(&p);
