@@ -82,6 +82,7 @@ int verificaPilhaVazia(Pilha* p) {
 }
 
 // Retorna o tamanho atual da pilha
+
 int tamanhoPilha(Pilha* p) {
     if (p == NULL) return 0;
     return p->tamanho;
